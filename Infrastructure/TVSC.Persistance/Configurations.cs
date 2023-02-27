@@ -13,12 +13,17 @@ namespace TVSC.Persistance
         {
             get
             {
-                ConfigurationManager configurationManager = new();
-                configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/TVSC.PresentationAPI.API"));
-                configurationManager.AddJsonFile("appsettings.json");
-
-                return configurationManager.GetConnectionString("SqlServer");
+               return GetConnectionString("../../Presentation/TVSC.PresentationAPI.API",
+                   "appsettings.json", "SqlServer");
             }
+        }
+        public static string GetConnectionString(string folder,string file, string key)
+        {
+            ConfigurationManager configurationManager = new();
+            configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), folder));
+            configurationManager.AddJsonFile(file);
+
+            return configurationManager.GetConnectionString(key);
         }
     }
 }
