@@ -34,9 +34,9 @@ namespace TVSC.Infrastructure.Concretes
             mail.Subject     = subject;
             mail.IsBodyHtml  = isBodyHtml;
             mail.Body        = body;
-            mail.From        = new(_configuration["Mail:SelfMail"], "Ruben Swift", Encoding.UTF8);
+            mail.From        = new(_configuration["SelfMail"], "Rezervation Site", Encoding.UTF8);
 
-            smtp.Credentials = new NetworkCredential(_configuration["Mail:SelfMail"], _configuration["Mail:Pass"]);
+            smtp.Credentials = new NetworkCredential(_configuration["SelfMail"], _configuration["MailPass"]);
             smtp.Port        = Convert.ToInt32(_configuration["Mail:Port"]);
             smtp.EnableSsl   = true;
             smtp.Host        = _configuration["Mail:Host"];
