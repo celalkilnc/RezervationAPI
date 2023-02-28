@@ -21,8 +21,8 @@ namespace TVSC.PresentationAPI.API.Controllers
             _userWriteRepository = userWriteRepository;
             _userReadRepository = userReadRepository;
         }                              
-                                                                         
-        [HttpGet("GetUsers")]                                            
+
+        [HttpGet("GetUsers")]
         public IQueryable<User> GetUsers()                               
         {                                                                
             //Kullanıcıları db'den çekip deleted olmayanları döner       
@@ -38,7 +38,6 @@ namespace TVSC.PresentationAPI.API.Controllers
             return users.Where(x => x.Status == StatusEnum.Deleted);
         }
 
-
         [HttpPost("adduser")]                                            
         public async Task<IActionResult> AddUser(User user)              
         {                                                                
@@ -48,17 +47,17 @@ namespace TVSC.PresentationAPI.API.Controllers
             await _userWriteRepository.AddAsync(                         
                 new()                                                    
                 {                            
-                    Id = user.Id,
-                    Username = user.Username, 
-                    Email = user.Email,
-                    Password = user.Password, 
-                    Status = user.Status,
+                    Id          = user.Id,
+                    Username    = user.Username, 
+                    Email       = user.Email,
+                    Password    = user.Password, 
+                    Status      = user.Status,
                     CreatedDate = DateTime.Now,
                 });                           
             await _userWriteRepository.SaveAsync();                      
             return Ok($"{user.Username} successfully added.");
         }                                                                
-        
+ 
         [HttpGet("changestatus")]
         public async Task ChangeStatus(User user)                        
         {
@@ -87,7 +86,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             User useredit = await _userReadRepository.GetByIdAsync(user.Id.ToString());
 
             useredit.Username = user.Username;
-            useredit.Email = user.Email;
+            useredit.Email    = user.Email;
             useredit.Password = user.Password;
             
             await _userWriteRepository.SaveAsync();
