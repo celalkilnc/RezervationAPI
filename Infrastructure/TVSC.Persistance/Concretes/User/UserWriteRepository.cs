@@ -14,5 +14,6 @@ namespace TVSC.Persistance.Concretes
     public class UserWriteRepository : WriteRepository<User>, IUserWriteRepository
     {
         public UserWriteRepository(TvscApiDbContext context) : base(context) { }
+
     }
 }
