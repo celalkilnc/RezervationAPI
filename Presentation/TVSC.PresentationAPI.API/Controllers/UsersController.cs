@@ -12,9 +12,9 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        readonly private IUserWriteRepository _userWriteRepository;
-        readonly private IUserReadRepository  _userReadRepository;       
-                                                                         
+        readonly private IUserWriteRepository _userWriteRepository; 
+        readonly private IUserReadRepository  _userReadRepository;      
+                                                                       
         public UsersController(IUserWriteRepository userWriteRepository, 
             IUserReadRepository userReadRepository)
         {
@@ -30,6 +30,15 @@ namespace TVSC.PresentationAPI.API.Controllers
             return users.Where(x => x.Status != StatusEnum.Deleted);     
         }
 
+        [HttpGet("getdeletedusers")]
+        public IQueryable<User> GetDeletedUsers()
+        {
+            //Kullanıcıları db'den çekip deleted olmayanları döner       
+            var users = _userReadRepository.GetAll();
+            return users.Where(x => x.Status == StatusEnum.Deleted);
+        }
+
+
         [HttpPost("adduser")]                                            
         public async Task<IActionResult> AddUser(User user)              
         {                                                                
@@ -38,17 +47,19 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             await _userWriteRepository.AddAsync(                         
                 new()                                                    
-                {                             
+                {                            
+                    Id = user.Id,
                     Username = user.Username, 
                     Email = user.Email,
                     Password = user.Password, 
-                    Status = user.Status      
+                    Status = user.Status,
+                    CreatedDate = DateTime.Now,
                 });                           
             await _userWriteRepository.SaveAsync();                      
-            return Ok($"{user.Username} successfully added.");           
+            return Ok($"{user.Username} successfully added.");
         }                                                                
-                                                  
-        [HttpGet("changestatus")]                                        
+        
+        [HttpGet("changestatus")]
         public async Task ChangeStatus(User user)                        
         {
             User _user = await _userReadRepository.GetByIdAsync(user.Id.ToString());
@@ -56,50 +67,46 @@ namespace TVSC.PresentationAPI.API.Controllers
             if(_user.Status == StatusEnum.Deleted || !ModelState.IsValid)
                 throw new Exception();
 
-            StatusEnum s;
-            if(_user.Status == StatusEnum.Active) s = StatusEnum.Passive;
-            else s = StatusEnum.Active;
+            StatusEnum state;
+            if(_user.Status == StatusEnum.Active)
+                state = StatusEnum.Passive;
+            else
+                state = StatusEnum.Active;
 
-            user.Status = s;
-            _userWriteRepository.Update(user);
+            _user.Status = state;
             await _userWriteRepository.SaveAsync();
         }
 
-        [HttpPut("updateuser")]
-        public async Task<bool> UpdateUser(string id, User user)
+        [HttpGet("updateuser")]
+        public async Task<IActionResult> UpdateUser(User user)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || user.Status == StatusEnum.Deleted)
                 throw new Exception();
-            
-            User useredit = await _userReadRepository.GetByIdAsync(id);
-                         
-            useredit.Id          = user.Id;
-            useredit.Username    = user.Username;
-            useredit.Status      = user.Status;       
-            useredit.Email       = user.Email;        
-            useredit.Password    = user.Password;     
-            useredit.CreatedDate = user.CreatedDate;
 
-            bool result = _userWriteRepository.Update(useredit);
+            //id yoluyla verileri değişmesi gereken kullanıcıyı çekme
+            User useredit = await _userReadRepository.GetByIdAsync(user.Id.ToString());
+
+            useredit.Username = user.Username;
+            useredit.Email = user.Email;
+            useredit.Password = user.Password;
+            
             await _userWriteRepository.SaveAsync();
- 
-            return result;
+            return Ok($"'{useredit.Username}' updated");
         }                
        
-        [HttpGet("DeleteUser")]
-        public async Task DeleteUser(string id)
-        { 
-            await UpdateStatusByIdAsync(id, StatusEnum.Deleted);
-        }
-
-        #region NonAction
-        private async Task UpdateStatusByIdAsync(string id, StatusEnum newEnum)
+        [HttpGet("deleteuser")]
+        public async Task<IActionResult> DeleteUser(User user)
         {
-            User user = await _userReadRepository.GetByIdAsync(id);
-            user.Status = newEnum;
+            User _user = await _userReadRepository.GetByIdAsync(user.Id.ToString());
+
+            if(_user.Status == StatusEnum.Deleted)
+                return BadRequest($"'{_user.Username}' already deleted!..");
+
+            _user.Status = StatusEnum.Deleted;
             await _userWriteRepository.SaveAsync();
+
+            return Ok($"'{_user.Username}' deleted.");
         }
-        #endregion
-    }                    
-}                        
+    }
+} 
                          

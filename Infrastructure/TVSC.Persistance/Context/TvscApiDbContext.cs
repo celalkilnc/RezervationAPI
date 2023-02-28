@@ -21,11 +21,8 @@ namespace TVSC.Persistance.Context
 
             foreach (var data in datas)
             {
-                _ = data.State switch
-                {
-                    EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow,
-                    EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow
-                };
+                if (data.State == EntityState.Modified)
+                    data.Entity.UpdatedDate = DateTime.UtcNow;
             }
             return base.SaveChangesAsync(cancellationToken);
         }
