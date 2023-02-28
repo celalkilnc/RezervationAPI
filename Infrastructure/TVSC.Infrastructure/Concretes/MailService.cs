@@ -31,11 +31,13 @@ namespace TVSC.Infrastructure.Concretes
             foreach(var item in to)
                  mail.To.Add(item);
 
+            //Gönderilicek maili oluşturma
             mail.Subject     = subject;
             mail.IsBodyHtml  = isBodyHtml;
             mail.Body        = body;
             mail.From        = new(_configuration["SelfMail"], "Rezervation Site", Encoding.UTF8);
 
+            //Gönderilicek kanalı oluşturma
             smtp.Credentials = new NetworkCredential(_configuration["SelfMail"],
                                                      _configuration["MailPass"]);
             smtp.Port        = Convert.ToInt32(_configuration["Mail:Port"]);
