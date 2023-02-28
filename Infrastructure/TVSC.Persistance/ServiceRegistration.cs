@@ -17,11 +17,12 @@ namespace TVSC.Persistance
         public static void AddPersistanceServices( this IServiceCollection services )
         {
             //App katmanındaki IPS classını,Persistance katmanındaki PS clasıyla eşitlemek için
-            services.AddDbContext<TvscApiDbContext>(options => options.UseSqlServer(Configurations.ConnectionString),ServiceLifetime.Singleton);
-
+            services.AddDbContext<TvscApiDbContext>(options 
+                => options.UseSqlServer(Configurations.ConnectionString),
+                                                ServiceLifetime.Singleton);
+            s
             services.AddSingleton<IUserReadRepository, UserReadRepository>();
             services.AddSingleton<IUserWriteRepository, UserWriteRepository>();
         }
     }
 }
-//Scope - Singleton - Trancient

@@ -26,7 +26,7 @@ namespace TVSC.Infrastructure.Concretes
         public async Task SendMailAsync(string[] to, string subject, string body, bool isBodyHtml = true)
         {
             MailMessage mail = new();
-            SmtpClient smtp  = new();
+            SmtpClient  smtp = new();
 
             foreach(var item in to)
                  mail.To.Add(item);
@@ -36,7 +36,8 @@ namespace TVSC.Infrastructure.Concretes
             mail.Body        = body;
             mail.From        = new(_configuration["SelfMail"], "Rezervation Site", Encoding.UTF8);
 
-            smtp.Credentials = new NetworkCredential(_configuration["SelfMail"], _configuration["MailPass"]);
+            smtp.Credentials = new NetworkCredential(_configuration["SelfMail"],
+                                                     _configuration["MailPass"]);
             smtp.Port        = Convert.ToInt32(_configuration["Mail:Port"]);
             smtp.EnableSsl   = true;
             smtp.Host        = _configuration["Mail:Host"];
