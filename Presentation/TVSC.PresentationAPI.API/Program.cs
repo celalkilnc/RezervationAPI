@@ -1,5 +1,7 @@
 using TVSC.Persistance;
 using TVSC.Infrastructure;
+using Serilog;
+using Serilog.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+#region Serilog
+
+Logger log = new LoggerConfiguration()
+    .WriteTo.File("logs/logs.txt")
+    .CreateLogger();
+
+builder.Host.UseSerilog(log);
+
+#endregion
 
 builder.Services.AddPersistanceServices();
 builder.Services.AddInfrastructureServices();

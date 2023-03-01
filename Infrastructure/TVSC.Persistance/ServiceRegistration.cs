@@ -20,7 +20,7 @@ namespace TVSC.Persistance
             services.AddDbContext<TvscApiDbContext>(options 
                 => options.UseSqlServer(Configurations.ConnectionString),
                                                 ServiceLifetime.Singleton);
-            s
+            
             services.AddSingleton<IUserReadRepository, UserReadRepository>();
             services.AddSingleton<IUserWriteRepository, UserWriteRepository>();
         }
