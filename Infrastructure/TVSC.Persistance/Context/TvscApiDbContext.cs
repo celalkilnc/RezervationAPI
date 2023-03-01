@@ -15,6 +15,9 @@ namespace TVSC.Persistance.Context
         public TvscApiDbContext(DbContextOptions options) : base(options) { }
         public DbSet<User> Users { get; set; }
 
+        public DbSet<LogEvent> LogEvents { get; set; }
+
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var datas = ChangeTracker.Entries<BaseEntity>();

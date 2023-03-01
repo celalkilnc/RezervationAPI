@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Serilog;
 using TVSC.Application.Repositories;
 using TVSC.Application.Service;
 using TVSC.Domain.Entities;
@@ -13,23 +14,31 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        #region ReadOnly
         readonly private IUserWriteRepository _userWriteRepository;
         readonly private IUserReadRepository _userReadRepository;
         readonly private IMailService _mailService;
+        readonly private ILogger<UsersController> _logger;
+        #endregion
 
-        public UsersController(IUserWriteRepository userWriteRepository,
-            IUserReadRepository userReadRepository , IMailService mailService)
-        {
+        public UsersController(
+            IUserWriteRepository userWriteRepository,
+            IUserReadRepository  userReadRepository, 
+            IMailService         mailService,
+            ILogger<UsersController> logger)
+        { 
             _userWriteRepository = userWriteRepository;
-            _userReadRepository = userReadRepository;
-            _mailService = mailService;
+            _userReadRepository  = userReadRepository;
+            _mailService         = mailService;
+            _logger              = logger;
         }
 
         [HttpGet("GetUsers")]
         public IQueryable<User> GetUsers()
         {
-            //Kullanıcıları db'den çekip deleted olmayanları döner       
+            //Kullanıcıları db'den çekip deleted olmayanları döner   
             var users = _userReadRepository.GetAll();
+            _logger.LogInformation("'GetUsers' method triggered *************");
             return users.Where(x => x.Status != StatusEnum.Deleted);
         }
 
@@ -53,6 +62,7 @@ namespace TVSC.PresentationAPI.API.Controllers
                 $"<strong>{user.Username}</strong> record sucesful.Welcome.");
             await _userWriteRepository.SaveAsync();
             
+            _logger.LogInformation($"[{DateTime.Now}]   Added user: {user.Username}");
             return Ok($"{user.Username} successfully added.");
         }
 

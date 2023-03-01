@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TVSC.Persistance.Context;
 
@@ -11,9 +12,10 @@ using TVSC.Persistance.Context;
 namespace TVSC.Persistance.Migrations
 {
     [DbContext(typeof(TvscApiDbContext))]
-    partial class TvscApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230301151123_mig_log")]
+    partial class mig_log
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

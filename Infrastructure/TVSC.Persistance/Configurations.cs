@@ -17,6 +17,7 @@ namespace TVSC.Persistance
                    "appsettings.json", "SqlServer");
             }
         }
+
         public static string GetConnectionString(string folder,string file, string key)
         {
             ConfigurationManager configurationManager = new();

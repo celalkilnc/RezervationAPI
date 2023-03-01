@@ -2,6 +2,8 @@ using TVSC.Persistance;
 using TVSC.Infrastructure;
 using Serilog;
 using Serilog.Core;
+using TVSC.PresentationAPI.API.Controllers;
+using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,15 +14,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region Serilog
 
-Logger log = new LoggerConfiguration()
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Console()
     .WriteTo.File("logs/logs.txt")
+    .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("SqlServer"),
+    sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents" })
     .CreateLogger();
 
-builder.Host.UseSerilog(log);
+// SerilogSink
+// Provided Sinks
 
-#endregion
+logger.Information("Starting Web Host ************");
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+builder.Host.UseSerilog();
 
 builder.Services.AddPersistanceServices();
 builder.Services.AddInfrastructureServices();
