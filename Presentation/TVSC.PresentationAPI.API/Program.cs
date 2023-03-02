@@ -23,7 +23,7 @@ var logger = new LoggerConfiguration()
     .WriteTo.MSSqlServer(Configurations.ConnectionStringLog,"LogEvents")
     .CreateLogger();
 
-builder.Services.AddSingleton<ILogger<UsersController>>();
+//builder.Services.AddSingleton<ILogger<UsersController>>();
 
 // SerilogSink
 // Provided Sinks
