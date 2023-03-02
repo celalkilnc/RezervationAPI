@@ -47,7 +47,9 @@ namespace TVSC.PresentationAPI.API.Controllers
         {
             //Kullanıcıları db'den çekip deleted olmayanları döner       
             var users = _userReadRepository.GetAll();
+            _logger.LogInformation("'GetDeletedUsers' method trigerred");
             return users.Where(x => x.Status == StatusEnum.Deleted);
+
         }
 
         [HttpPost("adduser")]
@@ -81,6 +83,8 @@ namespace TVSC.PresentationAPI.API.Controllers
                 state = StatusEnum.Active;
 
             _user.Status = state;
+            _logger.LogInformation($"{user.Username}'s status updated. New status: {state.ToString()}");
+
             await _userWriteRepository.SaveAsync();
         }
 
@@ -98,6 +102,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             useredit = user;
 
             await _userWriteRepository.SaveAsync();
+            _logger.LogInformation($"'{useredit.Username}' updated");
             return Ok($"'{useredit.Username}' updated");
         }
 
@@ -111,6 +116,7 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             _user.Status = StatusEnum.Deleted;
             await _userWriteRepository.SaveAsync();
+            _logger.LogInformation($"'{_user.Username}' deleted.");
 
             return Ok($"'{_user.Username}' deleted.");
         }

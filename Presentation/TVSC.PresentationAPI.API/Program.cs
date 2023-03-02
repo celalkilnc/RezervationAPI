@@ -15,18 +15,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .WriteTo.Console()
     .WriteTo.File("logs/logs.txt")
-    .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("SqlServer"),
-    sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents" })
+    .WriteTo.MSSqlServer(Configurations.ConnectionStringLog,"LogEvents")
     .CreateLogger();
+
+builder.Services.AddSingleton<ILogger<UsersController>>();
 
 // SerilogSink
 // Provided Sinks
 
-logger.Information("Starting Web Host ************");
+logger.Information("*** System Started ***");
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);

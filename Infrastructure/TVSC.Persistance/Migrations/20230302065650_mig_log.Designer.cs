@@ -12,7 +12,7 @@ using TVSC.Persistance.Context;
 namespace TVSC.Persistance.Migrations
 {
     [DbContext(typeof(TvscApiDbContext))]
-    [Migration("20230301151123_mig_log")]
+    [Migration("20230302065650_mig_log")]
     partial class mig_log
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
