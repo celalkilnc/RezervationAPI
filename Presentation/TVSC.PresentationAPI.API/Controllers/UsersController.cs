@@ -80,7 +80,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             if (_user.Status == StatusEnum.Active)
                 state = StatusEnum.Passive;
             else
-                state = StatusEnum.Active;
+                state = StatusEnum.Active; 
 
             _user.Status = state;
             _logger.LogInformation($"{user.Username}'s status updated. New status: {state.ToString()}");

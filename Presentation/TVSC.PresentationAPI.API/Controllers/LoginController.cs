@@ -1,6 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Nancy.Json;
+using System.Text.Json.Nodes;
+using System.Text;
 using TVSC.Infrastructure.Santsg.Model;
+using System.Net.Http;
+using TVSC.Infrastructure.Santsg;
+using RestSharp;
+using Nancy;
+using RestClient = RestSharp.RestClient;
+using System.Security.Policy;
 
 namespace TVSC.PresentationAPI.API.Controllers
 {
@@ -8,19 +17,27 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        HttpClient client;
-
         private readonly string _serviceAdress = "https://preprod-services.tourvisio.com/v2";
+
         public LoginController()
         {
-            client= new HttpClient();
+
         }
 
         [HttpPost("userlogin")]
-        public async Task<IActionResult> UserLoginAsync(LoginModel login )
+        public async Task<IActionResult> UserLoginAsync(LoginModel login)
         {
-            HttpResponseMessage response = await client.GetAsync( _serviceAdress + "/api/authenticationservice/login");
-            return Ok(response);
+            string postUrl = _serviceAdress + "/api/authenticationservice/login";
+            var json = new JavaScriptSerializer().Serialize(login);
+            HttpClient client = new HttpClient();
+
+            //var content  = new StringContent(lo, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsJsonAsync(postUrl, login);
+            var id = await response.Content.ReadAsStringAsync(); 
+            // Response içindeki veriyi okumak için ekstra metod gereklidir
+
+            return Ok(id);
         }
     }
 }
