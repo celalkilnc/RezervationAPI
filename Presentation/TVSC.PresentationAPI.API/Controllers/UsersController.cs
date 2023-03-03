@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Serilog;
+﻿using Microsoft.AspNetCore.Mvc;
 using TVSC.Application.Repositories;
 using TVSC.Application.Service;
 using TVSC.Domain.Entities;
 using TVSC.Domain.Enumerations;
-using TVSC.Persistance.Context;
 
 namespace TVSC.PresentationAPI.API.Controllers
 {

@@ -1,9 +1,6 @@
 using TVSC.Persistance;
 using TVSC.Infrastructure;
 using Serilog;
-using Serilog.Core;
-using TVSC.PresentationAPI.API.Controllers;
-using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -15,6 +15,7 @@ namespace TVSC.Persistance.Concretes
     {
         public UserReadRepository(TvscApiDbContext context) : base(context) { }
 
+
         
     }
 }
