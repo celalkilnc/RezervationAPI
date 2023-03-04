@@ -10,7 +10,7 @@ namespace TVSC.Infrastructure.Concretes
 {
     public class LoginService : ILoginService
     {
-        readonly IConfiguration _configuration;
+        readonly IConfiguration _configuration; 
         HttpClient client;
         public LoginService(IConfiguration configuration)
         {
