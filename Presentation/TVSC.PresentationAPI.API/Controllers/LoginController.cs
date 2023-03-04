@@ -18,7 +18,7 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("userlogin")]
         public async Task<IActionResult> PostTokenAsync(LoginModel login)
         {
-            TokenModel tokenModel = await _loginService.PostTokenAsync(login);
+            var tokenModel = await _loginService.PostTokenAsync(login);
 
             return Ok(tokenModel);
         }
