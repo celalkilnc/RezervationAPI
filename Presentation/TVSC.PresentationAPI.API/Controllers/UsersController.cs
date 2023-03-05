@@ -73,6 +73,8 @@ namespace TVSC.PresentationAPI.API.Controllers
                 throw new Exception();
 
             StatusEnum state;
+
+
             if (_user.Status == StatusEnum.Active)
                 state = StatusEnum.Passive;
             else

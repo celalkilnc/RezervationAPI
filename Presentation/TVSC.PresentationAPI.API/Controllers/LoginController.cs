@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TVSC.Infrastructure.Santsg.Model;
-using TVSC.Domain.Entities.Santsg.Models;
 using TVSC.Application.Service;
 
 namespace TVSC.PresentationAPI.API.Controllers

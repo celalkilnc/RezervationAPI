@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TVSC.Domain.Entities.Common;
+﻿using TVSC.Domain.Entities.Common;
 
 namespace TVSC.Application.Repositories
 {

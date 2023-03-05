@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using TVSC.Persistance.Concretes;
 using TVSC.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using TVSC.Application.Repositories;
-using TVSC.Domain.Entities;
 
 namespace TVSC.Persistance
 {
@@ -21,6 +15,8 @@ namespace TVSC.Persistance
                 => options.UseSqlServer(Configurations.ConnectionString),
                                                 ServiceLifetime.Singleton);
             
+            services.AddMemoryCache();
+
             services.AddSingleton<IUserReadRepository, UserReadRepository>();
             services.AddSingleton<IUserWriteRepository, UserWriteRepository>();
         }
