@@ -4,7 +4,7 @@ using TVSC.Application.Service;
 using TVSC.Infrastructure.Santsg.Model;
 using TVSC.Domain.Entities.Santsg.Models;
 using Microsoft.Extensions.Configuration;
-
+using TVSC.Domain.Entities.Santsg;
 
 namespace TVSC.Infrastructure.Concretes
 {
@@ -16,16 +16,15 @@ namespace TVSC.Infrastructure.Concretes
         {
             _configuration = configuration;
         }
-        
+
+
         public async Task<TokenModel> PostTokenAsync(LoginModel login)
         {
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:TokenService"];
-            var json = JsonSerializer.Serialize(login);
+            //var json = JsonSerializer.Serialize(login);
             client = new HttpClient();
 
-            var response = await client.PostAsJsonAsync(postUrl, login);
-            var result   = await response.Content.ReadAsStringAsync();
-            // Response içindeki veriyi okumak için ekstra metod gereklidir
+            string result = await HttpRequestAsync(postUrl, login);
 
             BodyModel bodyModel = JsonSerializer.Deserialize<BodyModel>(result);
             
@@ -37,5 +36,25 @@ namespace TVSC.Infrastructure.Concretes
 
             return tokenModel;
         }
+
+        public async Task GetArrivalAsync(ArrivalAutoCompModel model)
+        {
+            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
+            var response = await client.PostAsJsonAsync(postUrl, model);
+
+
+        }
+
+        private async Task<string> HttpRequestAsync(string url, SantsgBase model)
+        {
+            client = new HttpClient();
+
+            var response = await client.PostAsJsonAsync(url, model);
+            var result = await response.Content.ReadAsStringAsync();
+            // Response içindeki veriyi okumak için ekstra metod gereklidir
+
+            return result;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using TVSC.Application.Repositories;
 using TVSC.Application.Service;
 using TVSC.Domain.Entities;
@@ -34,7 +35,10 @@ namespace TVSC.PresentationAPI.API.Controllers
         {
             //Kullanıcıları db'den çekip deleted olmayanları döner   
             var users = _userReadRepository.GetAll();
-            _logger.LogInformation("'GetUsers' method triggered *************");
+
+            _logger.LogInformation(
+                $"Request succesful: 'Get Users'");
+
             return users.Where(x => x.Status != StatusEnum.Deleted);
         }
 
@@ -43,7 +47,8 @@ namespace TVSC.PresentationAPI.API.Controllers
         {
             //Kullanıcıları db'den çekip deleted olmayanları döner       
             var users = _userReadRepository.GetAll();
-            _logger.LogInformation("'GetDeletedUsers' method trigerred");
+
+            _logger.LogInformation($"Request succesful. 'GetDeleteUsers'");
             return users.Where(x => x.Status == StatusEnum.Deleted);
 
         }
@@ -56,11 +61,12 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             user.CreatedDate = DateTime.Now;
             await _userWriteRepository.AddAsync(user);
-            await _mailService.SendMailAsync(user.Email, "User Record",
+            await _mailService.SendMailAsync(user.Email, subject: "User Record",
                 $"<strong>{user.Username}</strong> record sucesful.Welcome.");
             await _userWriteRepository.SaveAsync();
             
-            _logger.LogInformation($"[{DateTime.Now}]   Added user: {user.Username}");
+            _logger.LogInformation($"Request succesful. Added user: {user.Username} - {user.Id}");
+
             return Ok($"{user.Username} successfully added.");
         }
 
@@ -73,16 +79,12 @@ namespace TVSC.PresentationAPI.API.Controllers
                 throw new Exception();
 
             StatusEnum state;
-
-
             if (_user.Status == StatusEnum.Active)
                 state = StatusEnum.Passive;
             else
                 state = StatusEnum.Active; 
 
             _user.Status = state;
-            _logger.LogInformation($"{user.Username}'s status updated. New status: {state.ToString()}");
-
             await _userWriteRepository.SaveAsync();
         }
 
@@ -100,7 +102,6 @@ namespace TVSC.PresentationAPI.API.Controllers
             useredit = user;
 
             await _userWriteRepository.SaveAsync();
-            _logger.LogInformation($"'{useredit.Username}' updated");
             return Ok($"'{useredit.Username}' updated");
         }
 
@@ -110,12 +111,16 @@ namespace TVSC.PresentationAPI.API.Controllers
             User _user = await _userReadRepository.GetByIdAsync(user.Id.ToString());
 
             if (_user.Status == StatusEnum.Deleted)
+            {
+                _logger.LogWarning($"Request unsuccessful. '{_user.Username}' already deleted!..");
                 return BadRequest($"'{_user.Username}' already deleted!..");
+            }
+                
 
             _user.Status = StatusEnum.Deleted;
             await _userWriteRepository.SaveAsync();
-            _logger.LogInformation($"'{_user.Username}' deleted.");
 
+            _logger.LogInformation($"Request succesful. '{_user.Username}' deleted.");
             return Ok($"'{_user.Username}' deleted.");
         }
     }

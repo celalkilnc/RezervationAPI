@@ -6,5 +6,6 @@ namespace TVSC.Application.Service
     public interface ILoginService
     {
         public Task<TokenModel> PostTokenAsync(LoginModel login);
+        public Task GetArrivalAsync(ArrivalAutoCompModel model);
     }
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TVSC.Domain.Entities.Santsg;
 
 namespace TVSC.Infrastructure.Santsg.Model
 {
-    public class LoginModel
+    public class LoginModel : SantsgBase
     {
         public string Agency { get; set; }
 
