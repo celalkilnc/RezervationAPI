@@ -18,6 +18,7 @@ namespace TVSC.Application
         {
             return client;
         }
+
         public static HttpClient HttpClientReturn(string token)
         {
             client.DefaultRequestHeaders.Authorization =
