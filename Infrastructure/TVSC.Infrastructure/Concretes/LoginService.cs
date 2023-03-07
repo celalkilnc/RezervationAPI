@@ -1,17 +1,17 @@
 ﻿using System.Text.Json;
 using System.Net.Http.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using TVSC.Application.Service;
 using TVSC.Infrastructure.Santsg.Model;
 using TVSC.Domain.Entities.Santsg.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace TVSC.Infrastructure.Concretes
 {
     public class LoginService : ILoginService
     {
-        readonly IConfiguration _configuration;
         readonly ILogger<LoginService> _logger;
+        readonly IConfiguration _configuration;
 
         HttpClient Client = new();
         public LoginService(IConfiguration configuration, ILogger<LoginService> logger)
