@@ -11,24 +11,27 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        #region ReadOnly
+        #region Dependency Injection 
         readonly private IUserWriteRepository _userWriteRepository;
         readonly private IUserReadRepository _userReadRepository;
         readonly private IMailService _mailService;
         readonly private ILogger<UsersController> _logger;
-        #endregion
+        readonly ICacheService _cacheService;
 
         public UsersController(
             IUserWriteRepository userWriteRepository,
-            IUserReadRepository  userReadRepository, 
-            IMailService         mailService,
-            ILogger<UsersController> logger)
-        { 
+            IUserReadRepository userReadRepository,
+            IMailService mailService,
+            ILogger<UsersController> logger,
+            ICacheService cacheService)
+        {
             _userWriteRepository = userWriteRepository;
-            _userReadRepository  = userReadRepository;
-            _mailService         = mailService;
-            _logger              = logger;
+            _userReadRepository = userReadRepository;
+            _mailService = mailService;
+            _logger = logger;
+            _cacheService = cacheService;
         }
+        #endregion
 
         [HttpGet("GetUsers")]
         public IQueryable<User> GetUsers()
@@ -38,6 +41,8 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             _logger.LogInformation(
                 $"Request succesful: 'Get Users'");
+
+            _logger.LogInformation(HttpContext.Session.GetString("Token"));
 
             return users.Where(x => x.Status != StatusEnum.Deleted);
         }

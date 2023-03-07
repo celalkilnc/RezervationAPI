@@ -12,12 +12,14 @@ namespace TVSC.Infrastructure.Concretes
     {
         readonly ILogger<LoginService> _logger;
         readonly IConfiguration _configuration;
+        readonly ICacheService _cacheService;
 
         HttpClient Client = new();
-        public LoginService(IConfiguration configuration, ILogger<LoginService> logger)
+        public LoginService(IConfiguration configuration, ILogger<LoginService> logger, ICacheService cacheService)
         {
-            _logger= logger;
+            _logger = logger;
             _configuration = configuration;
+            _cacheService = cacheService;
         }
 
         public async Task<TokenModel> PostTokenAsync(LoginModel login)
@@ -43,6 +45,8 @@ namespace TVSC.Infrastructure.Concretes
         {
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
             var result = HttpRequestAsync<ArrivalAutoCompModel>(postUrl, model);
+
+
         }
 
         private async Task<string> HttpRequestAsync<T>(string url, T model)
@@ -53,6 +57,5 @@ namespace TVSC.Infrastructure.Concretes
 
             return result;
         }
-
     }
 }

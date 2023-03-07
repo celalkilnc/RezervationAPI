@@ -15,13 +15,18 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
-
-
 //Add services to the container from other layers 
 builder.Services.AddPersistanceServices();
 builder.Services.AddInfrastructureServices();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout= TimeSpan.FromMinutes(10);
+});
+
 var app = builder.Build();
+
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

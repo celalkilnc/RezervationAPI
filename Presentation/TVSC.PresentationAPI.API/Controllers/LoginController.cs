@@ -3,6 +3,7 @@ using TVSC.Infrastructure.Santsg.Model;
 using TVSC.Application.Service;
 using Microsoft.Extensions.Caching.Memory;
 using TVSC.Domain.Entities.Santsg.Models;
+using TVSC.Application.Veriables; 
 
 namespace TVSC.PresentationAPI.API.Controllers
 {
@@ -12,36 +13,35 @@ namespace TVSC.PresentationAPI.API.Controllers
     {
         TokenModel tokenModel;
 
-
-        IMemoryCache _memoryCache;
+        ICacheService _cacheService;
         ILoginService _loginService;
         ILogger<LoginController> _logger;
 
-        public LoginController(ILoginService loginService, IMemoryCache memoryCache, ILogger<LoginController> logger)
+        public LoginController(ILoginService loginService, ILogger<LoginController> logger, ICacheService cacheService)
         {
             _loginService = loginService;
-            _memoryCache = memoryCache;
             _logger = logger;
+            _cacheService = cacheService;
         }
 
         [HttpPost("userlogin")]
         public async Task<IActionResult> PostTokenAsync(LoginModel login)
         {
+            
+
             try
             {
-                if (!_memoryCache.TryGetValue("Token", out tokenModel))
+                if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
                 {
                     tokenModel = await _loginService.PostTokenAsync(login);
-                    var cacheOptions = new MemoryCacheEntryOptions()
-                        .SetSlidingExpiration(TimeSpan.FromMinutes(15))
-                        .SetPriority(CacheItemPriority.Normal);
+                    HttpContext.Session.SetString("Token", tokenModel.token);
                 }
-
+                _logger.LogInformation(HttpContext.Session.GetString("Token"));
                 _logger.LogInformation("Token request succesful.");
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Token request unsuccesful.  Exception :" + ex.Message);
+                _logger.LogWarning("Token request unsuccesful.  Exception: " + ex.Message);
             }
             return Ok(tokenModel);
         }

@@ -9,7 +9,12 @@ namespace TVSC.Infrastructure
         public static void AddInfrastructureServices( this  IServiceCollection services)
         {
             services.AddSingleton<IMailService, MailService>();
+
             services.AddSingleton<ILoginService, LoginService>();
+
+            services.AddDistributedMemoryCache();
+           
+            services.AddSingleton<ICacheService, CacheService>();
         }
     }
 }
