@@ -10,7 +10,6 @@ namespace TVSC.Infrastructure
         {
             services.AddSingleton<IMailService, MailService>();
 
-            services.AddSingleton<ILoginService, LoginService>();
 
             services.AddDistributedMemoryCache();
            

@@ -3,7 +3,9 @@ using TVSC.Infrastructure.Santsg.Model;
 using TVSC.Application.Service;
 using Microsoft.Extensions.Caching.Memory;
 using TVSC.Domain.Entities.Santsg.Models;
-using TVSC.Application.Veriables; 
+using TVSC.Application.Veriables;
+using System.Text.Json;
+using TVSC.Application;
 
 namespace TVSC.PresentationAPI.API.Controllers
 {
@@ -12,44 +14,56 @@ namespace TVSC.PresentationAPI.API.Controllers
     public class LoginController : ControllerBase
     {
         TokenModel tokenModel;
+        HttpClient client;
 
         ICacheService _cacheService;
-        ILoginService _loginService;
         ILogger<LoginController> _logger;
+        IConfiguration _configuration;
 
-        public LoginController(ILoginService loginService, ILogger<LoginController> logger, ICacheService cacheService)
+        public LoginController(
+            ILogger<LoginController> logger,
+            ICacheService cacheService, 
+            IConfiguration configuration)
         {
-            _loginService = loginService;
             _logger = logger;
             _cacheService = cacheService;
+            _configuration = configuration;
+            client = new();
         }
 
         [HttpPost("userlogin")]
         public async Task<IActionResult> PostTokenAsync(LoginModel login)
         {
-            
+            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:TokenService"];
+            BodyModel bodyModel = new();
 
             try
             {
                 if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
                 {
-                    tokenModel = await _loginService.PostTokenAsync(login);
+
+                    var response = await client.PostAsJsonAsync(postUrl, login);
+                    var result = await response.Content.ReadAsStringAsync();
+                    bodyModel = JsonSerializer.Deserialize<BodyModel>(result);
+
+                    if (bodyModel.body == null)
+                        throw new Exception("Error: 'Body' is null!..");
+
+                    TokenModel tokenModel = new()
+                    {
+                        token = bodyModel.body.token,
+                        expiresOn = bodyModel.body.expiresOn,
+                        tokenId = bodyModel.body.tokenId
+                    };
                     HttpContext.Session.SetString("Token", tokenModel.token);
                 }
-                _logger.LogInformation(HttpContext.Session.GetString("Token"));
                 _logger.LogInformation("Token request succesful.");
             }
             catch (Exception ex)
             {
                 _logger.LogWarning("Token request unsuccesful.  Exception: " + ex.Message);
             }
-            return Ok(tokenModel);
-        }
-
-        [HttpPost("getarrivalautocomplete")]
-        public IActionResult GetArrivalAutoComplete(ArrivalAutoCompModel model)
-        {
-            return Ok();
+            return Ok(HttpContext.Session.GetString("Token"));
         }
     }
 }
