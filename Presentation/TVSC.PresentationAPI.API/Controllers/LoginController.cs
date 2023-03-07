@@ -10,9 +10,11 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
+        TokenModel tokenModel;
+
+
         IMemoryCache _memoryCache;
         ILoginService _loginService;
-        TokenModel tokenModel;
         ILogger<LoginController> _logger;
 
         public LoginController(ILoginService loginService, IMemoryCache memoryCache, ILogger<LoginController> logger)
@@ -25,23 +27,28 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("userlogin")]
         public async Task<IActionResult> PostTokenAsync(LoginModel login)
         {
-            tokenModel = await _loginService.PostTokenAsync(login);
-            //if (!_memoryCache.TryGetValue("Token", tokenModel))
-            //{
-                
-            //    var cacheOptions = new MemoryCacheEntryOptions()
-            //        .SetSlidingExpiration(TimeSpan.FromMinutes(15))
-            //        .SetPriority(CacheItemPriority.Normal);
-            //}
+            try
+            {
+                if (!_memoryCache.TryGetValue("Token", out tokenModel))
+                {
+                    tokenModel = await _loginService.PostTokenAsync(login);
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromMinutes(15))
+                        .SetPriority(CacheItemPriority.Normal);
+                }
 
-            _logger.LogInformation("Token request succesful.");
+                _logger.LogInformation("Token request succesful.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Token request unsuccesful.  Exception :" + ex.Message);
+            }
             return Ok(tokenModel);
         }
 
         [HttpPost("getarrivalautocomplete")]
         public IActionResult GetArrivalAutoComplete(ArrivalAutoCompModel model)
-        { 
-            
+        {
             return Ok();
         }
     }
