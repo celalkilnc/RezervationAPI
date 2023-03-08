@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
-using TVSC.Application;
+﻿using System.Net.Http.Headers;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using TVSC.Domain.Entities.Santsg.Models;
+using TVSC.Domain.Entities.Santsg.Models.Response;
 
 namespace TVSC.PresentationAPI.API.Controllers
 {
@@ -23,15 +24,18 @@ namespace TVSC.PresentationAPI.API.Controllers
         {
             HttpClient client = new();
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
+
+            //Tekrar eden kod!!!
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //client = HttpHelper.HttpClientReturn(HttpContext.Session.GetString("Token"));
 
             var response = await client.PostAsJsonAsync(postUrl, arrivalModel);
             var result = await response.Content.ReadAsStringAsync();
 
-            return Ok(result);
+            ArrivalAutoCompleteResponseModel model = JsonSerializer.Deserialize<ArrivalAutoCompleteResponseModel>(result);
+
+            _logger.LogInformation($"Search Request. Query: '{arrivalModel.Query}'");
+            return Ok(model.body.items);
         }
     }
 }

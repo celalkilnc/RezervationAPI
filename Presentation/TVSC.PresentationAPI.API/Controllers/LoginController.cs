@@ -53,9 +53,7 @@ namespace TVSC.PresentationAPI.API.Controllers
                         expiresOn = bodyModel.body.expiresOn,
                         tokenId = bodyModel.body.tokenId
                     };
-
                     HttpContext.Session.SetString("Token", tokenModel.token);
-
                 }
                 _logger.LogInformation("Token request succesful.");
             }

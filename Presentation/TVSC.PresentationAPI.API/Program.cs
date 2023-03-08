@@ -2,7 +2,6 @@ using Serilog;
 using TVSC.Persistance;
 using TVSC.Infrastructure;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

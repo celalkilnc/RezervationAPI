@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TVSC.Application.Repositories;
 using TVSC.Application.Service;
 using TVSC.Domain.Entities;
@@ -74,7 +73,6 @@ namespace TVSC.PresentationAPI.API.Controllers
             _logger.LogInformation($"Request succesful. Added user: {user.Username} - {user.Id}");
 
              return Ok($"{user.Username} successfully added.");
-            
         }
 
         [HttpGet("changestatus")]
