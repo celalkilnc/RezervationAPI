@@ -44,6 +44,7 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             _logger.LogInformation(HttpContext.Session.GetString("Token"));
 
+           
             return users.Where(x => x.Status != StatusEnum.Deleted);
         }
 
@@ -72,7 +73,8 @@ namespace TVSC.PresentationAPI.API.Controllers
             
             _logger.LogInformation($"Request succesful. Added user: {user.Username} - {user.Id}");
 
-            return Ok($"{user.Username} successfully added.");
+             return Ok($"{user.Username} successfully added.");
+            
         }
 
         [HttpGet("changestatus")]
@@ -107,7 +109,8 @@ namespace TVSC.PresentationAPI.API.Controllers
             useredit = user;
 
             await _userWriteRepository.SaveAsync();
-            return Ok($"'{useredit.Username}' updated");
+            
+             return Ok($"'{useredit.Username}' updated");
         }
 
         [HttpGet("deleteuser")]
@@ -126,7 +129,8 @@ namespace TVSC.PresentationAPI.API.Controllers
             await _userWriteRepository.SaveAsync();
 
             _logger.LogInformation($"Request succesful. '{_user.Username}' deleted.");
-            return Ok($"'{_user.Username}' deleted.");
+            return Ok(HttpContext.Session.GetString("Token"));
+            //return Ok($"'{_user.Username}' deleted.");
         }
     }
 }

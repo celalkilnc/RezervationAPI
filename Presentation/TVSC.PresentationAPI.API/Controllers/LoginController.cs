@@ -13,7 +13,6 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        TokenModel tokenModel;
         HttpClient client;
 
         ICacheService _cacheService;
@@ -41,7 +40,6 @@ namespace TVSC.PresentationAPI.API.Controllers
             {
                 if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
                 {
-
                     var response = await client.PostAsJsonAsync(postUrl, login);
                     var result = await response.Content.ReadAsStringAsync();
                     bodyModel = JsonSerializer.Deserialize<BodyModel>(result);
@@ -55,7 +53,9 @@ namespace TVSC.PresentationAPI.API.Controllers
                         expiresOn = bodyModel.body.expiresOn,
                         tokenId = bodyModel.body.tokenId
                     };
+
                     HttpContext.Session.SetString("Token", tokenModel.token);
+
                 }
                 _logger.LogInformation("Token request succesful.");
             }
