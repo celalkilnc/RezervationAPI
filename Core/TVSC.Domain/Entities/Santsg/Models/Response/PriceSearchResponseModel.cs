@@ -7,5 +7,4 @@ using System.Threading.Tasks;
 namespace TVSC.Domain.Entities.Santsg.Models.Response
 {
    
-
 }
