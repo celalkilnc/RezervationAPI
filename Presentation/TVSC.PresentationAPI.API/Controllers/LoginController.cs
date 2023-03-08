@@ -15,6 +15,7 @@ namespace TVSC.PresentationAPI.API.Controllers
     {
         HttpClient client;
 
+        #region Dependency Injection
         ICacheService _cacheService;
         ILogger<LoginController> _logger;
         IConfiguration _configuration;
@@ -29,9 +30,10 @@ namespace TVSC.PresentationAPI.API.Controllers
             _configuration = configuration;
             client = new();
         }
+        #endregion
 
         [HttpPost("userlogin")]
-        public async Task<IActionResult> PostTokenAsync(LoginModel login)
+        public async Task<IActionResult> LoginAsync(LoginModel login)
         {
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:TokenService"];
             BodyModel bodyModel = new();
@@ -53,6 +55,7 @@ namespace TVSC.PresentationAPI.API.Controllers
                         expiresOn = bodyModel.body.expiresOn,
                         tokenId = bodyModel.body.tokenId
                     };
+
                     HttpContext.Session.SetString("Token", tokenModel.token);
                 }
                 _logger.LogInformation("Token request succesful.");

@@ -1,15 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace TVSC.Domain.Entities.Santsg.Models
 {
     public class BodyModel
     {
         public Body body { get; set; }
         public Header header { get; set; }
+    }
+
+    public class Body
+    {
+        public string token { get; set; }
+        public DateTime expiresOn { get; set; }
+        public int tokenId { get; set; }
+        public UserInfo userInfo { get; set; }
+        public bool loggedInWithMasterKey { get; set; }
+    }
+
+    public class Header
+    {
+        public string requestId { get; set; }
+        public bool success { get; set; }
+        public DateTime responseTime { get; set; }
+        public List<Message> messages { get; set; }
     }
 
     public class Agency
@@ -38,23 +50,6 @@ namespace TVSC.Domain.Entities.Santsg.Models
         public bool hideAgencyCreditOnWeb { get; set; }
         public bool force2FactorAuth { get; set; }
         public int location { get; set; }
-    }
-
-    public class Body
-    {
-        public string token { get; set; }
-        public DateTime expiresOn { get; set; }
-        public int tokenId { get; set; }
-        public UserInfo userInfo { get; set; }
-        public bool loggedInWithMasterKey { get; set; }
-    }
-
-    public class Header
-    {
-        public string requestId { get; set; }
-        public bool success { get; set; }
-        public DateTime responseTime { get; set; }
-        public List<Message> messages { get; set; }
     }
 
     public class MainAgency
@@ -105,8 +100,6 @@ namespace TVSC.Domain.Entities.Santsg.Models
         public string thumbnail { get; set; }
         public bool agencyCanDiscountCommission { get; set; }
     }
-
-
 
     public class UserInfo
     {
