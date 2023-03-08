@@ -24,16 +24,9 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("getarrivalautocomplete")]
         public async Task<IActionResult> GetArrivelAutoComplete(ArrivalAutoCompModel arrivalModel)
         {
-            HttpClient client = new();
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
 
-            //Tekrar eden kod!!!
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-            //Request
-            var response = await client.PostAsJsonAsync(postUrl, arrivalModel);
-            var result = await response.Content.ReadAsStringAsync();
+            var result = await ReturnResultAsync<ArrivalAutoCompModel>(postUrl, arrivalModel);
 
             //Json to model
             var model = JsonSerializer.Deserialize<ArrivalAutoCompleteResponseModel>(result);
@@ -45,18 +38,25 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("pricesearch")]
         public async Task<IActionResult> PriceSearch(PriceSearchRequestModel priceModel)
         {
-            HttpClient client = new();
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:PriceSearch"];
 
-            //Tekrar eden kod!!!
+            var result = await ReturnResultAsync<PriceSearchRequestModel>(postUrl, priceModel);
+
+
+            return Ok(result);
+        }
+
+        private async Task<string> ReturnResultAsync<T>(string url, T model)
+        {
+            HttpClient client = new();
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
             //Request
-            var response = await client.PostAsJsonAsync(postUrl, priceModel);
+            var response = await client.PostAsJsonAsync(url, model);
             var result = await response.Content.ReadAsStringAsync();
 
-            return Ok(result);
+            return result;
         }
     }
 }
