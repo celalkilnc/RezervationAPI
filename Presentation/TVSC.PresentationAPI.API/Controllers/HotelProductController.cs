@@ -1,6 +1,6 @@
-﻿using System.Net.Http.Headers;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using TVSC.Application;
 using TVSC.Domain.Entities.Santsg.Models;
 using TVSC.Domain.Entities.Santsg.Models.Request;
 using TVSC.Domain.Entities.Santsg.Models.Response;
@@ -26,7 +26,8 @@ namespace TVSC.PresentationAPI.API.Controllers
         {
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
 
-            var result = await ReturnResultAsync<ArrivalAutoCompModel>(postUrl, arrivalModel);
+            var result = await HttpHelper.ReturnResultAsync<ArrivalAutoCompModel>(
+                            postUrl, arrivalModel, HttpContext.Session.GetString("Token"));
 
             //Json to model
             var model = JsonSerializer.Deserialize<ArrivalAutoCompleteResponseModel>(result);
@@ -40,23 +41,12 @@ namespace TVSC.PresentationAPI.API.Controllers
         {
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:PriceSearch"];
 
-            var result = await ReturnResultAsync<PriceSearchRequestModel>(postUrl, priceModel);
-
+            var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
+                            postUrl, priceModel, HttpContext.Session.GetString("Token"));
 
             return Ok(result);
         }
 
-        private async Task<string> ReturnResultAsync<T>(string url, T model)
-        {
-            HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-            //Request
-            var response = await client.PostAsJsonAsync(url, model);
-            var result = await response.Content.ReadAsStringAsync();
-
-            return result;
-        }
     }
 }

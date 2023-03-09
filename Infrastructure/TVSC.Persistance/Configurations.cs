@@ -22,7 +22,6 @@ namespace TVSC.Persistance
             }
         }
         
-
         public static string GetConnectionString(string folder, string file, string key)
         {
             ConfigurationManager configurationManager = new();
