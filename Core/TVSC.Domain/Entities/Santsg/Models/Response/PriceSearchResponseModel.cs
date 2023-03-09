@@ -8,9 +8,11 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 {
     public class PriceSearchResponseModel
     {
-        public Body body { get; set; }
-        public Header header { get; set; }
-
+        public class BoardGroup
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+        }
 
         public class Body
         {
@@ -49,6 +51,12 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string name { get; set; }
         }
 
+        public class Geolocation
+        {
+            public string longitude { get; set; }
+            public string latitude { get; set; }
+        }
+
         public class GiataInfo
         {
             public string hotelId { get; set; }
@@ -71,13 +79,13 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class Hotel
         {
-            public int stars { get; set; }
+            public double stars { get; set; } /*Error: Json to Int16*/
             public List<Facility> facilities { get; set; }
             public Location location { get; set; }
             public City city { get; set; }
             public List<Offer> offers { get; set; }
             public string address { get; set; }
-            public List<object> boardGroups { get; set; }
+            public List<BoardGroup> boardGroups { get; set; }
             public HotelCategory hotelCategory { get; set; }
             public DistanceFromSea distanceFromSea { get; set; }
             public string code { get; set; }
@@ -85,6 +93,8 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string id { get; set; }
             public string name { get; set; }
             public GiataInfo giataInfo { get; set; }
+            public Geolocation geolocation { get; set; }
+            public bool? hasThirdPartyOwnOffer { get; set; }
         }
 
         public class HotelCategory
@@ -130,6 +140,11 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public Price price { get; set; }
             public bool ownOffer { get; set; }
             public int provider { get; set; }
+            public List<object> cancellationPolicies { get; set; }
+            public Supplier supplier { get; set; }
+            public bool? thirdPartyOwnOffer { get; set; }
+            public List<object> restrictions { get; set; }
+            public List<object> warnings { get; set; }
         }
 
         public class Price
@@ -155,7 +170,7 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string accomName { get; set; }
             public string boardId { get; set; }
             public string boardName { get; set; }
-            public List<object> boardGroups { get; set; }
+            public List<BoardGroup> boardGroups { get; set; }
             public int allotment { get; set; }
             public int stopSaleGuaranteed { get; set; }
             public int stopSaleStandart { get; set; }
@@ -163,8 +178,11 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public Price price { get; set; }
             public List<Traveller> travellers { get; set; }
             public List<Service> services { get; set; }
+            public ThirdPartyInformation thirdPartyInformation { get; set; }
         }
 
+            public Body body { get; set; }
+            public Header header { get; set; }
 
         public class SalePeriod
         {
@@ -175,6 +193,15 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
         public class Service
         {
             public string name { get; set; }
+        }
+
+        public class Supplier
+        {
+            public string name { get; set; }
+        }
+
+        public class ThirdPartyInformation
+        {
         }
 
         public class Tour
@@ -190,7 +217,10 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public int type { get; set; }
             public double? minAge { get; set; }
             public double? maxAge { get; set; }
+            public int? age { get; set; }
+            public string nationality { get; set; }
         }
+
 
     }
 }

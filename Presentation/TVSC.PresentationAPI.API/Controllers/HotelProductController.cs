@@ -44,9 +44,22 @@ namespace TVSC.PresentationAPI.API.Controllers
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
                             postUrl, priceModel, HttpContext.Session.GetString("Token"));
 
-            return Ok(result);
+           var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result); /*Model doldurma başarısız. Hotel.stars */ 
+
+            return Ok(responseModel.body);
         }
 
+        [HttpPost("getproductinfo")]
+        public async Task<IActionResult> GetProductInfo(ProductInfoRequestModel model)
+        {
+            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetProductInfo"];
 
+            var result = await HttpHelper.ReturnResultAsync<ProductInfoRequestModel>(
+                            postUrl, model, HttpContext.Session.GetString("Token"));
+
+            var responseModel = JsonSerializer.Deserialize<ProductInfoResponseModel>(result);
+
+            return Ok(responseModel);
+        }
     }
 }

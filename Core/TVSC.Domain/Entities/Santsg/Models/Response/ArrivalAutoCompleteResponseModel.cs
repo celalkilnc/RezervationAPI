@@ -73,6 +73,5 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string name { get; set; }
         }
 
-
     }
 }
