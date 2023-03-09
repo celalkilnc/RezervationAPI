@@ -44,7 +44,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
                             postUrl, priceModel, HttpContext.Session.GetString("Token"));
 
-           var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result); /*Model doldurma başarısız. Hotel.stars */ 
+           var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
 
             return Ok(responseModel.body);
         }

@@ -79,7 +79,7 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class Hotel
         {
-            public double stars { get; set; } /*Error: Json to Int16*/
+            public double stars { get; set; } 
             public List<Facility> facilities { get; set; }
             public Location location { get; set; }
             public City city { get; set; }
