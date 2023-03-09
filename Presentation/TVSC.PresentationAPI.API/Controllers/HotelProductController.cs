@@ -14,7 +14,7 @@ namespace TVSC.PresentationAPI.API.Controllers
         IConfiguration _configuration;
         ILogger<HotelProductController> _logger;
 
-        public HotelProductController(IConfiguration configuration, 
+        public HotelProductController(IConfiguration configuration,
             ILogger<HotelProductController> logger)
         {
             _configuration = configuration;
@@ -44,7 +44,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
                             postUrl, priceModel, HttpContext.Session.GetString("Token"));
 
-           var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
+            var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
 
             return Ok(responseModel.body);
         }
@@ -59,7 +59,20 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             var responseModel = JsonSerializer.Deserialize<ProductInfoResponseModel>(result);
 
-            return Ok(responseModel);
+            return Ok(responseModel.body);
+        }
+
+        [HttpPost("getoffers")]
+        public async Task<IActionResult> GetOffers(GetOffersRequestModel model)
+        {
+            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetOffers"];
+
+            var result = await HttpHelper.ReturnResultAsync<GetOffersRequestModel>(
+                                 postUrl, model, HttpContext.Session.GetString("Token"));
+
+            var responseModel = JsonSerializer.Deserialize<GetOffersResponseModel>(result);
+
+            return Ok(responseModel.body);
         }
     }
 }
