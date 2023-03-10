@@ -79,8 +79,9 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class Hotel
         {
+            public string id { get; set; }
+            public string name { get; set; }
             public double stars { get; set; } 
-            public List<Facility> facilities { get; set; }
             public Location location { get; set; }
             public City city { get; set; }
             public List<Offer> offers { get; set; }
@@ -90,29 +91,28 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public DistanceFromSea distanceFromSea { get; set; }
             public string code { get; set; }
             public int provider { get; set; }
-            public string id { get; set; }
-            public string name { get; set; }
-            public GiataInfo giataInfo { get; set; }
-            public Geolocation geolocation { get; set; }
-            public bool? hasThirdPartyOwnOffer { get; set; }
+            //public GiataInfo giataInfo { get; set; }
+            //public Geolocation geolocation { get; set; }
+            //public bool? hasThirdPartyOwnOffer { get; set; }
+            //public List<Facility> facilities { get; set; }
         }
 
         public class HotelCategory
         {
-            public string name { get; set; }
             public string id { get; set; }
+            public string name { get; set; }
             public string code { get; set; }
         }
 
         public class Location
         {
+            public string id { get; set; }
             public string name { get; set; }
-            public string latitude { get; set; }
-            public string longitude { get; set; }
+            //public string latitude { get; set; }
+            //public string longitude { get; set; }
             public string countryId { get; set; }
             public int provider { get; set; }
             public bool isTopRegion { get; set; }
-            public string id { get; set; }
         }
 
         public class Message
@@ -125,6 +125,7 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class Offer
         {
+            public string offerId { get; set; }
             public int night { get; set; }
             public bool isAvailable { get; set; }
             public int availability { get; set; }
@@ -135,13 +136,13 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public DateTime accomodationCheckIn { get; set; }
             public int accomodationNight { get; set; }
             public DateTime expiresOn { get; set; }
-            public string offerId { get; set; }
             public DateTime checkIn { get; set; }
             public Price price { get; set; }
             public bool ownOffer { get; set; }
             public int provider { get; set; }
             public List<object> cancellationPolicies { get; set; }
-            public Supplier supplier { get; set; }
+
+            //public Supplier supplier { get; set; }
             public bool? thirdPartyOwnOffer { get; set; }
             public List<object> restrictions { get; set; }
             public List<object> warnings { get; set; }
@@ -177,8 +178,8 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public PriceList priceList { get; set; }
             public Price price { get; set; }
             public List<Traveller> travellers { get; set; }
-            public List<Service> services { get; set; }
-            public ThirdPartyInformation thirdPartyInformation { get; set; }
+            //public List<Service> services { get; set; }
+            //public ThirdPartyInformation thirdPartyInformation { get; set; }
         }
 
             public Body body { get; set; }
@@ -188,20 +189,6 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
         {
             public DateTime from { get; set; }
             public DateTime to { get; set; }
-        }
-
-        public class Service
-        {
-            public string name { get; set; }
-        }
-
-        public class Supplier
-        {
-            public string name { get; set; }
-        }
-
-        public class ThirdPartyInformation
-        {
         }
 
         public class Tour
@@ -220,7 +207,5 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public int? age { get; set; }
             public string nationality { get; set; }
         }
-
-
     }
 }

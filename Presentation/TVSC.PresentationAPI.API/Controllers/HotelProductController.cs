@@ -27,7 +27,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
 
             var result = await HttpHelper.ReturnResultAsync<ArrivalAutoCompModel>(
-                            postUrl, arrivalModel, HttpContext.Session.GetString("Token"));
+                                 postUrl, arrivalModel, HttpContext.Session.GetString("Token"));
 
             //Json to model
             var model = JsonSerializer.Deserialize<ArrivalAutoCompleteResponseModel>(result);
@@ -37,16 +37,35 @@ namespace TVSC.PresentationAPI.API.Controllers
         }
 
         [HttpPost("pricesearch")]
-        public async Task<IActionResult> PriceSearch(PriceSearchRequestModel priceModel)
+        public async Task<IActionResult> PriceSearch(PriceSearchRequestModel model)
         {
+            var defaultModel = new PriceSearchRequestModel()
+            {
+                // Defeault parameters 
+                checkStopSale = true,
+                checkAllotment = true,
+                getOnlyBestOffers = true,
+                getOnlyDiscountedPrice = true,
+
+                // Client's parameters
+                night = model.night,
+                checkIn = model.checkIn,
+                culture = model.culture,
+                currency = model.currency,
+                nationality = model.nationality,
+                productType = model.productType,
+                roomCriteria = model.roomCriteria,
+                arrivalLocations = model.arrivalLocations
+            };
+
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:PriceSearch"];
 
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
-                            postUrl, priceModel, HttpContext.Session.GetString("Token"));
+                                 postUrl, defaultModel, HttpContext.Session.GetString("Token"));
 
             var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
 
-            return Ok(responseModel.body);
+            return Ok(responseModel);
         }
 
         [HttpPost("getproductinfo")]
@@ -55,7 +74,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetProductInfo"];
 
             var result = await HttpHelper.ReturnResultAsync<ProductInfoRequestModel>(
-                            postUrl, model, HttpContext.Session.GetString("Token"));
+                                 postUrl, model, HttpContext.Session.GetString("Token"));
 
             var responseModel = JsonSerializer.Deserialize<ProductInfoResponseModel>(result);
 
@@ -73,6 +92,19 @@ namespace TVSC.PresentationAPI.API.Controllers
             var responseModel = JsonSerializer.Deserialize<GetOffersResponseModel>(result);
 
             return Ok(responseModel.body);
+        }
+
+        [HttpPost("getofferdetails")]
+        public async Task<IActionResult> GetOfferDetails(GetOfferDetailRequestModel model)
+        {
+            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetOfferDetail"];
+
+            var result = await HttpHelper.ReturnResultAsync<GetOfferDetailRequestModel>(
+                                 postUrl, model, HttpContext.Session.GetString("Token"));
+
+            var responseModel = JsonSerializer.Deserialize<GetOfferDetailResponseModel>(result);
+
+            return Ok(responseModel);
         }
     }
 }
