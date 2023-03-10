@@ -6,6 +6,7 @@ using TVSC.Domain.Entities.Santsg.Models;
 using TVSC.Application.Veriables;
 using System.Text.Json;
 using TVSC.Application;
+using TVSC.Domain.Entities.Santsg.Models.Response;
 
 namespace TVSC.PresentationAPI.API.Controllers
 {
@@ -14,7 +15,6 @@ namespace TVSC.PresentationAPI.API.Controllers
     public class LoginController : ControllerBase
     {
         HttpClient client;
-
         #region Dependency Injection
         ICacheService _cacheService;
         ILogger<LoginController> _logger;
@@ -35,8 +35,8 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("userlogin")]
         public async Task<IActionResult> LoginAsync(LoginModel login)
         {
-            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:TokenService"];
-            BodyModel bodyModel = new();
+            string postUrl = _configuration["TVServiceAdress"] + "authenticationservice/login";
+            LoginResponseModel responseModel = new();
 
             try
             {
@@ -44,21 +44,14 @@ namespace TVSC.PresentationAPI.API.Controllers
                 {
                     var response = await client.PostAsJsonAsync(postUrl, login);
                     var result = await response.Content.ReadAsStringAsync();
-                    bodyModel = JsonSerializer.Deserialize<BodyModel>(result);
+                    responseModel = JsonSerializer.Deserialize<LoginResponseModel>(result);
 
-                    if (bodyModel.body == null)
+                    if (responseModel.body == null)
                         throw new Exception("Error: 'Body' is null!..");
 
-                    TokenModel tokenModel = new()
-                    {
-                        token = bodyModel.body.token,
-                        expiresOn = bodyModel.body.expiresOn,
-                        tokenId = bodyModel.body.tokenId
-                    };
-
-                    HttpContext.Session.SetString("Token", tokenModel.token);
+                    HttpContext.Session.SetString("Token", responseModel.body.token);
                 }
-                _logger.LogInformation("Token request succesful.");
+                _logger.LogInformation("Token request succesful.", responseModel);
             }
             catch (Exception ex)
             {

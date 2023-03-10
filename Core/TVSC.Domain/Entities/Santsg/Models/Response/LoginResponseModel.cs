@@ -1,7 +1,12 @@
-﻿
-namespace TVSC.Domain.Entities.Santsg.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TVSC.Domain.Entities.Santsg.Models.Response
 {
-    public class BodyModel
+    public class LoginResponseModel
     {
         public Body body { get; set; }
         public Header header { get; set; }

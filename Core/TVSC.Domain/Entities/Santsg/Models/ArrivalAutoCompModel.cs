@@ -11,5 +11,7 @@ namespace TVSC.Domain.Entities.Santsg.Models
         public int    ProductType { get; set; }
         public string Query { get; set; }
         public string Culture { get; set; }
+        public string Country { get; set; }
+
     }
 }

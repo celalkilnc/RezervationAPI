@@ -8,7 +8,6 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 {
     public class GetOffersResponseModel
     {
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
         public class BoardGroup
         {
             public string id { get; set; }
@@ -53,21 +52,22 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class Offer
         {
-            public int night { get; set; }
-            public bool isAvailable { get; set; }
-            public int availability { get; set; }
-            public List<Room> rooms { get; set; }
-            public bool isRefundable { get; set; }
+            public string offerId { get; set; }     
+            public int night { get; set; }          
+            public DateTime checkIn { get; set; }   
+            public bool isAvailable { get; set; }   
+            public int availability { get; set; }   
+            public List<Room> rooms { get; set; }   
+            public bool isRefundable { get; set; }  
             public List<CancellationPolicy> cancellationPolicies { get; set; }
-            public List<PriceBreakdown> priceBreakdowns { get; set; }
-            public Supplier supplier { get; set; }
             public bool thirdPartyOwnOffer { get; set; }
-            public List<object> restrictions { get; set; }
             public List<object> warnings { get; set; }
             public DateTime expiresOn { get; set; }
-            public string offerId { get; set; }
-            public DateTime checkIn { get; set; }
             public Price price { get; set; }
+
+            //public List<PriceBreakdown> priceBreakdowns { get; set; }
+            //public Supplier supplier { get; set; }
+            //public List<object> restrictions { get; set; }
         }
 
         public class Price
@@ -101,10 +101,10 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public Body body { get; set; }
             public Header header { get; set; }
         
-        public class Supplier
-        {
-            public string name { get; set; }
-        }
+        //public class Supplier
+        //{
+        //    public string name { get; set; }
+        //}
 
         public class ThirdPartyInformation
         {

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TVSC.Application;
 using TVSC.Domain.Entities.Santsg.Models;
@@ -24,16 +25,19 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("getarrivalautocomplete")]
         public async Task<IActionResult> GetArrivelAutoComplete(ArrivalAutoCompModel arrivalModel)
         {
-            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetArrivalAutoComp"];
+            string postUrl = _configuration["TVServiceAdress"] + "productservice/getarrivalautocomplete";
 
             var result = await HttpHelper.ReturnResultAsync<ArrivalAutoCompModel>(
-                                 postUrl, arrivalModel, HttpContext.Session.GetString("Token"));
-
+                                postUrl, arrivalModel, HttpContext.Session.GetString("Token"));
             //Json to model
             var model = JsonSerializer.Deserialize<ArrivalAutoCompleteResponseModel>(result);
 
+
+            var filterModel = model.body.items
+                                    .Where(x => x.country.name == arrivalModel.Country);
             _logger.LogInformation($"Search Request. Query: '{arrivalModel.Query}'");
-            return Ok(model.body.items);
+
+            return Ok(filterModel);
         }
 
         [HttpPost("pricesearch")]
@@ -58,12 +62,20 @@ namespace TVSC.PresentationAPI.API.Controllers
                 arrivalLocations = model.arrivalLocations
             };
 
-            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:PriceSearch"];
+            string postUrl = _configuration["TVServiceAdress"] + "productservice/pricesearch";
 
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
                                  postUrl, defaultModel, HttpContext.Session.GetString("Token"));
 
             var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
+
+            try
+            {
+
+                HttpContext.Session.SetString("SearchId", responseModel.body.searchId);
+            }
+            catch (Exception ex) { }
+
 
             return Ok(responseModel);
         }
@@ -71,7 +83,8 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("getproductinfo")]
         public async Task<IActionResult> GetProductInfo(ProductInfoRequestModel model)
         {
-            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetProductInfo"];
+            HttpContext.Session.SetString("ProductId", model.product);
+            string postUrl = _configuration["TVServiceAdress"] + "productservice/getproductInfo";
 
             var result = await HttpHelper.ReturnResultAsync<ProductInfoRequestModel>(
                                  postUrl, model, HttpContext.Session.GetString("Token"));
@@ -84,7 +97,10 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("getoffers")]
         public async Task<IActionResult> GetOffers(GetOffersRequestModel model)
         {
-            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetOffers"];
+            model.searchId  = HttpContext.Session.GetString("SearchId");
+            model.productId = HttpContext.Session.GetString("ProductId");
+
+            string postUrl = _configuration["TVServiceAdress"] + "productservice/getoffers";
 
             var result = await HttpHelper.ReturnResultAsync<GetOffersRequestModel>(
                                  postUrl, model, HttpContext.Session.GetString("Token"));
@@ -97,7 +113,7 @@ namespace TVSC.PresentationAPI.API.Controllers
         [HttpPost("getofferdetails")]
         public async Task<IActionResult> GetOfferDetails(GetOfferDetailRequestModel model)
         {
-            string postUrl = _configuration["TVServiceAdress"] + _configuration["Santsg:GetOfferDetail"];
+            string postUrl = _configuration["TVServiceAdress"] + "productservice/getofferdetails";
 
             var result = await HttpHelper.ReturnResultAsync<GetOfferDetailRequestModel>(
                                  postUrl, model, HttpContext.Session.GetString("Token"));
