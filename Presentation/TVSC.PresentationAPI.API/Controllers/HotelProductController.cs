@@ -32,7 +32,6 @@ namespace TVSC.PresentationAPI.API.Controllers
             //Json to model
             var model = JsonSerializer.Deserialize<ArrivalAutoCompleteResponseModel>(result);
 
-
             var filterModel = model.body.items
                                     .Where(x => x.country.name == arrivalModel.Country);
             _logger.LogInformation($"Search Request. Query: '{arrivalModel.Query}'");
@@ -69,13 +68,8 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
 
-            try
-            {
-
+            if(responseModel.body.searchId != HttpContext.Session.GetString("SearchId") || responseModel.body.searchId == null)
                 HttpContext.Session.SetString("SearchId", responseModel.body.searchId);
-            }
-            catch (Exception ex) { }
-
 
             return Ok(responseModel);
         }
