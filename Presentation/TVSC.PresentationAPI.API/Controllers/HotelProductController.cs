@@ -11,7 +11,6 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class HotelProductController : ControllerBase
     {
-
         IConfiguration _configuration;
         ILogger<HotelProductController> _logger;
 
@@ -66,7 +65,7 @@ namespace TVSC.PresentationAPI.API.Controllers
                 roomCriteria = model.roomCriteria,
                 arrivalLocations = model.arrivalLocations
             };
-            string postUrl = _configuration["TVServiceAdress"] + "productservice/pricesearch";
+            string postUrl ="productservice/pricesearch";
 
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
                                  postUrl, defaultModel, HttpContext.Session.GetString("Token"));
@@ -85,7 +84,7 @@ namespace TVSC.PresentationAPI.API.Controllers
                 throw new Exception();
 
             HttpContext.Session.SetString("ProductId", model.product);
-            string postUrl = _configuration["TVServiceAdress"] + "productservice/getproductInfo";
+            string postUrl = "productservice/getproductInfo";
 
             var result = await HttpHelper.ReturnResultAsync<ProductInfoRequestModel>(
                                  postUrl, model, HttpContext.Session.GetString("Token"));
@@ -104,7 +103,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             model.searchId  = HttpContext.Session.GetString("SearchId");
             model.productId = HttpContext.Session.GetString("ProductId");
 
-            string postUrl  =/* _configuration["TVServiceAdress"] +*/ "productservice/getoffers";
+            string postUrl  ="productservice/getoffers";
 
             var result = await HttpHelper.ReturnResultAsync<GetOffersRequestModel>(
                                  postUrl, model, HttpContext.Session.GetString("Token"));
@@ -120,7 +119,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             if (!ModelState.IsValid)
                 throw new Exception();
 
-            string postUrl = _configuration["TVServiceAdress"] + "productservice/getofferdetails";
+            string postUrl =  "productservice/getofferdetails";
 
             var result = await HttpHelper.ReturnResultAsync<GetOfferDetailRequestModel>(
                                     postUrl, model, HttpContext.Session.GetString("Token"));
