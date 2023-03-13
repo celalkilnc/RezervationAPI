@@ -7,7 +7,7 @@ using TVSC.Domain.Entities.Santsg;
 
 namespace TVSC.Infrastructure.Santsg.Model
 {
-    public class LoginModel : SantsgBase
+    public class LoginModel
     {
         public string Agency { get; set; }
 

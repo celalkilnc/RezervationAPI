@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Http;
+﻿using TVSC.Application;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using TVSC.Application;
+using TVSC.PresentationAPI.API.Helper;
 using TVSC.Domain.Entities.Santsg.Models;
 using TVSC.Domain.Entities.Santsg.Models.Request;
 using TVSC.Domain.Entities.Santsg.Models.Response;
@@ -12,6 +12,8 @@ namespace TVSC.PresentationAPI.API.Controllers
     [ApiController]
     public class HotelProductController : ControllerBase
     {
+        SessionConfiguration session = new();
+
         IConfiguration _configuration;
         ILogger<HotelProductController> _logger;
 
@@ -60,7 +62,6 @@ namespace TVSC.PresentationAPI.API.Controllers
                 roomCriteria = model.roomCriteria,
                 arrivalLocations = model.arrivalLocations
             };
-
             string postUrl = _configuration["TVServiceAdress"] + "productservice/pricesearch";
 
             var result = await HttpHelper.ReturnResultAsync<PriceSearchRequestModel>(
@@ -68,8 +69,8 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             var responseModel = JsonSerializer.Deserialize<PriceSearchResponseModel>(result);
 
-            if(responseModel.body.searchId != HttpContext.Session.GetString("SearchId") || responseModel.body.searchId == null)
-                HttpContext.Session.SetString("SearchId", responseModel.body.searchId);
+            //if(responseModel.body.searchId != HttpContext.Session.GetString("SearchId") || responseModel.body.searchId == null)
+            HttpContext.Session.SetString("SearchId", responseModel.body.searchId.ToString());
 
             return Ok(responseModel);
         }
@@ -101,7 +102,7 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             var responseModel = JsonSerializer.Deserialize<GetOffersResponseModel>(result);
 
-            return Ok(responseModel.body);
+            return Ok(responseModel);
         }
 
         [HttpPost("getofferdetails")]

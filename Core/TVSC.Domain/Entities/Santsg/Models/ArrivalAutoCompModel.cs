@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TVSC.Domain.Entities.Santsg.Models
 {
-    public class ArrivalAutoCompModel : SantsgBase
+    public class ArrivalAutoCompModel 
     {
         public int    ProductType { get; set; }
         public string Query { get; set; }

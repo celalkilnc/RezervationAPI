@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TVSC.Infrastructure.Santsg.Model;
 using TVSC.Application.Service;
-using Microsoft.Extensions.Caching.Memory;
-using TVSC.Domain.Entities.Santsg.Models;
-using TVSC.Application.Veriables;
 using System.Text.Json;
-using TVSC.Application;
 using TVSC.Domain.Entities.Santsg.Models.Response;
 
 namespace TVSC.PresentationAPI.API.Controllers
@@ -57,7 +53,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             {
                 _logger.LogWarning("Token request unsuccesful.  Exception: " + ex.Message);
             }
-            return Ok(HttpContext.Session.GetString("Token"));
+            return Ok(responseModel);
         }
     }
 }

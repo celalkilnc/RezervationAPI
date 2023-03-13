@@ -1,4 +1,4 @@
-    using Serilog;
+using Serilog;
 using TVSC.Persistance;
 using TVSC.Infrastructure;
 
