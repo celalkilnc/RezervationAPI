@@ -11,6 +11,5 @@ namespace TVSC.Application.Veriables
         public string Key { get; set; }
 
         public T Value { get; set; }
-
     }
 }

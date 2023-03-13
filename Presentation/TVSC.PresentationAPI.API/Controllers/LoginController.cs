@@ -18,7 +18,7 @@ namespace TVSC.PresentationAPI.API.Controllers
 
         public LoginController(
             ILogger<LoginController> logger,
-            ICacheService cacheService, 
+            ICacheService cacheService,
             IConfiguration configuration)
         {
             _logger = logger;
@@ -34,19 +34,19 @@ namespace TVSC.PresentationAPI.API.Controllers
             string postUrl = _configuration["TVServiceAdress"] + "authenticationservice/login";
             LoginResponseModel responseModel = new();
 
+            if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
+                return Ok("Already logged in");
+
             try
             {
-                if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
-                {
-                    var response = await client.PostAsJsonAsync(postUrl, login);
-                    var result = await response.Content.ReadAsStringAsync();
-                    responseModel = JsonSerializer.Deserialize<LoginResponseModel>(result);
+                var response = await client.PostAsJsonAsync(postUrl, login);
+                var result = await response.Content.ReadAsStringAsync();
+                responseModel = JsonSerializer.Deserialize<LoginResponseModel>(result);
 
-                    if (responseModel.body == null)
-                        throw new Exception("Error: 'Body' is null!..");
+                if (responseModel.body == null)
+                    throw new Exception("Error: 'Body' is null!..");
 
-                    HttpContext.Session.SetString("Token", responseModel.body.token);
-                }
+                HttpContext.Session.SetString("Token", responseModel.body.token);
                 _logger.LogInformation("Token request succesful.", responseModel);
             }
             catch (Exception ex)

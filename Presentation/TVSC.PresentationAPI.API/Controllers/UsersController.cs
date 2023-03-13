@@ -43,19 +43,17 @@ namespace TVSC.PresentationAPI.API.Controllers
 
             _logger.LogInformation(HttpContext.Session.GetString("Token"));
 
-           
             return users.Where(x => x.Status != StatusEnum.Deleted);
         }
 
         [HttpGet("getdeletedusers")]
         public IQueryable<User> GetDeletedUsers()
-        {
+        {   
             //Kullanıcıları db'den çekip deleted olmayanları döner       
             var users = _userReadRepository.GetAll();
 
             _logger.LogInformation($"Request succesful. 'GetDeleteUsers'");
             return users.Where(x => x.Status == StatusEnum.Deleted);
-
         }
 
         [HttpPost("adduser")]
@@ -68,11 +66,11 @@ namespace TVSC.PresentationAPI.API.Controllers
             await _userWriteRepository.AddAsync(user);
             await _mailService.SendMailAsync(user.Email, subject: "User Record",
                 $"<strong>{user.Username}</strong> record sucesful.Welcome.");
+
             await _userWriteRepository.SaveAsync();
-            
             _logger.LogInformation($"Request succesful. Added user: {user.Username} - {user.Id}");
 
-             return Ok($"{user.Username} successfully added.");
+            return Ok($"{user.Username} successfully added.");
         }
 
         [HttpGet("changestatus")]
@@ -87,7 +85,7 @@ namespace TVSC.PresentationAPI.API.Controllers
             if (_user.Status == StatusEnum.Active)
                 state = StatusEnum.Passive;
             else
-                state = StatusEnum.Active; 
+                state = StatusEnum.Active;
 
             _user.Status = state;
             await _userWriteRepository.SaveAsync();
@@ -103,12 +101,12 @@ namespace TVSC.PresentationAPI.API.Controllers
             User useredit = await _userReadRepository.GetByIdAsync(user.Id.ToString());
 
             user.CreatedDate = useredit.CreatedDate;
-            user.Status      = useredit.Status;
+            user.Status = useredit.Status;
             useredit = user;
 
             await _userWriteRepository.SaveAsync();
-            
-             return Ok($"'{useredit.Username}' updated");
+
+            return Ok($"'{useredit.Username}' updated");
         }
 
         [HttpGet("deleteuser")]
@@ -121,14 +119,12 @@ namespace TVSC.PresentationAPI.API.Controllers
                 _logger.LogWarning($"Request unsuccessful. '{_user.Username}' already deleted!..");
                 return BadRequest($"'{_user.Username}' already deleted!..");
             }
-                
 
             _user.Status = StatusEnum.Deleted;
             await _userWriteRepository.SaveAsync();
 
             _logger.LogInformation($"Request succesful. '{_user.Username}' deleted.");
-            return Ok(HttpContext.Session.GetString("Token"));
-            //return Ok($"'{_user.Username}' deleted.");
+            return Ok($"'{_user.Username}' deleted.");
         }
     }
 }

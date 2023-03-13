@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TVSC.Application
 {
     public class HttpHelper
     {
+        IConfiguration _configuration;
+        public HttpHelper(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
 
         public static async Task<string> ReturnResultAsync<T>(string url, T model, string token)
         {
@@ -21,7 +22,7 @@ namespace TVSC.Application
                 new AuthenticationHeaderValue("Bearer", token);
 
             //Request
-            var response = await client.PostAsJsonAsync(url, model);
+            var response = await client.PostAsJsonAsync("https://preprod-services.tourvisio.com/v2/api/" + url, model);
 
             //Get content
             var result = await response.Content.ReadAsStringAsync();
