@@ -6,23 +6,38 @@ using System.Threading.Tasks;
 
 namespace TVSC.Domain.Entities.Santsg.Models.Response
 {
-    public class SetRezervationInfoResponseModel
+    public class GetRezervationDetailResponseModel
     {
         public Body body { get; set; }
         public Header header { get; set; }
+
+        public class Body
+        {
+            public string reservationNumber { get; set; }
+            public string encryptedReservationNumber { get; set; }
+            public string transactionId { get; set; }
+            public DateTime expiresOn { get; set; }
+            public ReservationData reservationData { get; set; }
+            public int status { get; set; }
+        }
+
+        public class Header
+        {
+            public string requestId { get; set; }
+            public bool success { get; set; }
+            public DateTime responseTime { get; set; }
+            public List<Message> messages { get; set; }
+        }
 
         public class AdditionalFields
         {
             public string travellerTypeOrder { get; set; }
             public string travellerUniqueID { get; set; }
             public string tourVisio_TravellerId { get; set; }
-            public DateTime birthDateFrom { get; set; }
-            public DateTime birthDateTo { get; set; }
-
-            //public string smsLimit { get; set; }
-            //public string priceChanged { get; set; }
-            //public string allowSalePriceEdit { get; set; }
-            //public string sendFlightSms { get; set; }
+            public string smsLimit { get; set; }
+            public string priceChanged { get; set; }
+            public string allowSalePriceEdit { get; set; }
+            public string allowAgencyCanRes { get; set; }
         }
 
         public class Address
@@ -34,7 +49,7 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string zipCode { get; set; }
             public City city { get; set; }
             public Country country { get; set; }
-            //public List<string> addressLines { get; set; }
+            public List<string> addressLines { get; set; }
         }
 
         public class Agency
@@ -97,16 +112,16 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class ArrivalCity
         {
+            public string code { get; set; }
             public string name { get; set; }
+            public int type { get; set; }
+            public string latitude { get; set; }
+            public string longitude { get; set; }
+            public string parentId { get; set; }
+            public string countryId { get; set; }
             public int provider { get; set; }
             public bool isTopRegion { get; set; }
             public string id { get; set; }
-            //public string code { get; set; }
-            //public int type { get; set; }
-            //public string latitude { get; set; }
-            //public string longitude { get; set; }
-            //public string parentId { get; set; }
-            //public string countryId { get; set; }
         }
 
         public class ArrivalCountry
@@ -130,14 +145,7 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string name { get; set; }
         }
 
-        public class Body
-        {
-            public int status { get; set; }
-            public int transactionType { get; set; }
-            public string transactionId { get; set; }
-            public DateTime expiresOn { get; set; }
-            public ReservationData reservationData { get; set; }
-        }
+
 
         public class BrokerCommission
         {
@@ -146,20 +154,25 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string currency { get; set; }
         }
 
-
+        public class CancellationPolicy
+        {
+            public DateTime dueDate { get; set; }
+            public Price price { get; set; }
+            public int provider { get; set; }
+        }
 
         public class City
         {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string code { get; set; }
+            public int type { get; set; }
+            public string latitude { get; set; }
+            public string longitude { get; set; }
+            public string parentId { get; set; }
+            public string countryId { get; set; }
             public int provider { get; set; }
             public bool isTopRegion { get; set; }
-            //public string id { get; set; }
-            //public string name { get; set; }
-            //public string code { get; set; }
-            //public int type { get; set; }
-            //public string latitude { get; set; }
-            //public string longitude { get; set; }
-            //public string parentId { get; set; }
-            //public string countryId { get; set; }
         }
 
         public class ContactPhone
@@ -170,21 +183,22 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
 
         public class Country
         {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string internationalCode { get; set; }
             public int provider { get; set; }
-            //public string id { get; set; }
-            //public string name { get; set; }
-            //public string internationalCode { get; set; }
-            //public bool isTopRegion { get; set; }
-            //public string latitude { get; set; }
-            //public string longitude { get; set; }
-            //public string code { get; set; }
-            //public int type { get; set; }
-            //public string parentId { get; set; }
-            //public string countryId { get; set; }
+            public bool isTopRegion { get; set; }
+            public string latitude { get; set; }
+            public string longitude { get; set; }
+            public string code { get; set; }
+            public int type { get; set; }
+            public string parentId { get; set; }
+            public string countryId { get; set; }
         }
 
         public class CustomerInfo
         {
+            public int id { get; set; }
             public bool isCompany { get; set; }
             public int title { get; set; }
             public string name { get; set; }
@@ -192,7 +206,7 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public DateTime birthDate { get; set; }
             public PassportInfo passportInfo { get; set; }
             public Address address { get; set; }
-            //public TaxInfo taxInfo { get; set; }
+            public TaxInfo taxInfo { get; set; }
             public string identityNumber { get; set; }
             public bool updateIfExists { get; set; }
             public bool updateOnlyNullFields { get; set; }
@@ -228,9 +242,9 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string id { get; set; }
         }
 
-        //public class DestinationAddress
-        //{
-        //}
+        public class DestinationAddress
+        {
+        }
 
         public class Discount
         {
@@ -238,41 +252,47 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string currency { get; set; }
         }
 
-        public class Header
-        {
-            public string requestId { get; set; }
-            public bool success { get; set; }
-            public DateTime responseTime { get; set; }
-            public List<Message> messages { get; set; }
-        }
+
 
         public class HolidayPackageInfo
         {
             public int priceListNo { get; set; }
             public string code { get; set; }
+            public string name { get; set; }
         }
 
         public class HotelDetail
         {
             public string id { get; set; }
             public string name { get; set; }
+            public int stars { get; set; }
             public Address address { get; set; }
             public string phoneNumber { get; set; }
             public string homePage { get; set; }
-
-            //public string faxNumber { get; set; }
-            //public TransferLocation transferLocation { get; set; }
+            public TransferLocation transferLocation { get; set; }
             public int stopSaleGuaranteed { get; set; }
             public int stopSaleStandart { get; set; }
-            public int stars { get; set; }
-
-            //public List<object> handicaps { get; set; }
-            //public Location location { get; set; }
+            public List<object> handicaps { get; set; }
+            public Location location { get; set; }
             public Country country { get; set; }
             public City city { get; set; }
+
+            //public string faxNumber { get; set; }
         }
 
-       
+        public class Location
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string code { get; set; }
+            public int type { get; set; }
+            public string latitude { get; set; }
+            public string longitude { get; set; }
+            public string parentId { get; set; }
+            public string countryId { get; set; }
+            public int provider { get; set; }
+            public bool isTopRegion { get; set; }
+        }
 
         public class Market
         {
@@ -349,7 +369,10 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string citizenshipCountryCode { get; set; }
         }
 
-
+        public class PaymentDetail
+        {
+            public List<PaymentPlan> paymentPlan { get; set; }
+        }
 
         public class PaymentPlan
         {
@@ -357,6 +380,11 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public DateTime dueDate { get; set; }
             public Price price { get; set; }
             public bool paymentStatus { get; set; }
+        }
+
+        public class PermissionInfo
+        {
+            public List<int> permissions { get; set; }
         }
 
         public class Price
@@ -389,20 +417,22 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public CustomerInfo customerInfo { get; set; }
             public ReservationInfo reservationInfo { get; set; }
             public List<Service> services { get; set; }
-            //public PaymentDetail paymentDetail { get; set; }
-            //public List<object> invoices { get; set; }
+            public PaymentDetail paymentDetail { get; set; }
+            public PermissionInfo permissionInfo { get; set; }
+            public List<object> invoices { get; set; }
         }
 
         public class ReservationInfo
         {
             public string bookingNumber { get; set; }
+            public string encryptedBookingNumber { get; set; }
             public Market market { get; set; }
             public Operator @operator { get; set; }
             public Agency agency { get; set; }
             public AgencyUser agencyUser { get; set; }
             public DateTime beginDate { get; set; }
             public DateTime endDate { get; set; }
-            public string note { get; set; }
+            //public string note { get; set; }
             public string agencyReservationNumber { get; set; }
             public SalePrice salePrice { get; set; }
             public SupplementDiscount supplementDiscount { get; set; }
@@ -424,25 +454,27 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public int reservationStatus { get; set; }
             public int confirmationStatus { get; set; }
             public int paymentStatus { get; set; }
+            //public List<object> documents { get; set; }
+            //public List<object> otherDocuments { get; set; }
             public ReservableInfo reservableInfo { get; set; }
             public int paymentFrom { get; set; }
-            public DepartureCountry departureCountry { get; set; }
-            public DepartureCity departureCity { get; set; }
+            //public DepartureCountry departureCountry { get; set; }
+            //public DepartureCity departureCity { get; set; }
             public ArrivalCountry arrivalCountry { get; set; }
             public ArrivalCity arrivalCity { get; set; }
             public DateTime createDate { get; set; }
+            public AdditionalFields additionalFields { get; set; }
             public HolidayPackageInfo holidayPackageInfo { get; set; }
-            public double agencyDiscount { get; set; }
-            public bool hasAvailablePromotionCode { get; set; }
-
-            //public AdditionalFields additionalFields { get; set; }
-            //public List<object> documents { get; set; }
-            //public List<object> otherDocuments { get; set; }
             //public string additionalCode1 { get; set; }
             //public string additionalCode2 { get; set; }
             //public string additionalCode3 { get; set; }
             //public string additionalCode4 { get; set; }
+            public double agencyDiscount { get; set; }
+            public bool hasAvailablePromotionCode { get; set; }
         }
+
+
+
 
         public class SalePrice
         {
@@ -457,46 +489,57 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public Price price { get; set; }
             public int passengerType { get; set; }
             public int orderNumber { get; set; }
+            public string note { get; set; }
+            public DepartureCountry departureCountry { get; set; }
+            public DepartureCity departureCity { get; set; }
+            public ArrivalCountry arrivalCountry { get; set; }
+            public ArrivalCity arrivalCity { get; set; }
+            public ServiceDetails serviceDetails { get; set; }
+            public bool isMainService { get; set; }
+            public bool isRefundable { get; set; }
+            public bool bundle { get; set; }
+            public List<CancellationPolicy> cancellationPolicies { get; set; }
+            public List<object> documents { get; set; }
+            public string encryptedServiceNumber { get; set; }
+            public List<object> priceBreakDowns { get; set; }
+            public double commission { get; set; }
+            public int unit { get; set; }
+            public int confirmationStatus { get; set; }
+            public int serviceStatus { get; set; }
+            public int productType { get; set; }
+            public bool createServiceTypeIfNotExists { get; set; }
+            public string code { get; set; }
+            public string name { get; set; }
             public DateTime beginDate { get; set; }
             public DateTime endDate { get; set; }
             public int adult { get; set; }
             public int child { get; set; }
+            public int infant { get; set; }
+            public NetPrice netPrice { get; set; }
             public bool includePackage { get; set; }
             public bool compulsory { get; set; }
             public bool isExtraService { get; set; }
             public string supplierCode { get; set; }
+            public string supplierName { get; set; }
+            public string supplier { get; set; }
             public int provider { get; set; }
+            public List<string> travellers { get; set; }
             public bool thirdPartyRecord { get; set; }
             public int recordId { get; set; }
-
-            //public int infant { get; set; }
-            //public NetPrice netPrice { get; set; }
-            //public string supplierName { get; set; }
-            //public string supplier { get; set; }
-            //public List<string> travellers { get; set; }
-            //public string note { get; set; }
-            //public DepartureCountry departureCountry { get; set; }
-            //public DepartureCity departureCity { get; set; }
-            //public ArrivalCountry arrivalCountry { get; set; }
-            //public ArrivalCity arrivalCity { get; set; }
-            //public ServiceDetails serviceDetails { get; set; }
-            //public bool isMainService { get; set; }
-            //public bool isRefundable { get; set; }
-            //public bool bundle { get; set; }
-            //public List<CancellationPolicy> cancellationPolicies { get; set; }
-            //public List<object> documents { get; set; }
-            //public List<object> priceBreakDowns { get; set; }
-            //public double commission { get; set; }
-            //public int unit { get; set; }
-            //public List<object> conditionalSpos { get; set; }
-            //public int confirmationStatus { get; set; }
-            //public int serviceStatus { get; set; }
-            //public int productType { get; set; }
-            //public bool createServiceTypeIfNotExists { get; set; }
-            //public string code { get; set; }
-            //public string name { get; set; }
         }
 
+        public class ServiceDetails
+        {
+            public string serviceId { get; set; }
+            public HotelDetail hotelDetail { get; set; }
+            public int night { get; set; }
+            public string roomCode { get; set; }
+            public string room { get; set; }
+            public string boardCode { get; set; }
+            public string board { get; set; }
+            public string accom { get; set; }
+            public string star { get; set; }
+        }
 
         public class SupplementDiscount
         {
@@ -504,6 +547,9 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string currency { get; set; }
         }
 
+        public class TaxInfo
+        {
+        }
 
         public class TotalPrice
         {
@@ -511,58 +557,6 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public string currency { get; set; }
         }
 
-
-        public class Traveller
-        {
-            public string travellerId { get; set; }
-            public int type { get; set; }
-            public int title { get; set; }
-            public List<AvailableTitle> availableTitles { get; set; }
-            public string name { get; set; }
-            public string surname { get; set; }
-            public bool isLeader { get; set; }
-            public DateTime birthDate { get; set; }
-            public int age { get; set; }
-            public Nationality nationality { get; set; }
-            public string identityNumber { get; set; }
-            public PassportInfo passportInfo { get; set; }
-            public Address address { get; set; }
-            public List<Service> services { get; set; }
-            public int gender { get; set; }
-            public int orderNumber { get; set; }
-            public DateTime birthDateFrom { get; set; }
-            public DateTime birthDateTo { get; set; }
-            public List<string> requiredFields { get; set; }
-            public int passengerType { get; set; }
-            public AdditionalFields additionalFields { get; set; }
-            public int status { get; set; }
-
-            //public List<object> availableAcademicTitles { get; set; }
-            //public List<object> insertFields { get; set; }
-            //public List<object> documents { get; set; }
-            //public DestinationAddress destinationAddress { get; set; }
-        }
-
-        public class CancellationPolicy
-        {
-            public DateTime beginDate { get; set; }
-            public DateTime dueDate { get; set; }
-            public Price price { get; set; }
-            public int provider { get; set; }
-        }
-        public class Location
-        {
-            public string code { get; set; }
-            public string name { get; set; }
-            public int type { get; set; }
-            public string latitude { get; set; }
-            public string longitude { get; set; }
-            public string parentId { get; set; }
-            public string countryId { get; set; }
-            public int provider { get; set; }
-            public bool isTopRegion { get; set; }
-            public string id { get; set; }
-        }
         public class TransferLocation
         {
             public string code { get; set; }
@@ -576,26 +570,37 @@ namespace TVSC.Domain.Entities.Santsg.Models.Response
             public bool isTopRegion { get; set; }
             public string id { get; set; }
         }
-        public class TaxInfo
+
+        public class Traveller
         {
+            public string travellerId { get; set; }
+            public int type { get; set; }
+            public int title { get; set; }
+            public List<AvailableTitle> availableTitles { get; set; }
+            public List<object> availableAcademicTitles { get; set; }
+            public string name { get; set; }
+            public string surname { get; set; }
+            public bool isLeader { get; set; }
+            public DateTime birthDate { get; set; }
+            public int age { get; set; }
+            public Nationality nationality { get; set; }
+            public string identityNumber { get; set; }
+            public PassportInfo passportInfo { get; set; }
+            public Address address { get; set; }
+            public DestinationAddress destinationAddress { get; set; }
+            public List<Service> services { get; set; }
+            public int gender { get; set; }
+            public int orderNumber { get; set; }
+            public DateTime birthDateFrom { get; set; }
+            public DateTime birthDateTo { get; set; }
+            public List<string> requiredFields { get; set; }
+            public List<object> documents { get; set; }
+            public int passengerType { get; set; }
+            public AdditionalFields additionalFields { get; set; }
+            public List<object> insertFields { get; set; }
+            public int status { get; set; }
         }
-        public class ServiceDetails
-        {
-            public string serviceId { get; set; }
-            public HotelDetail hotelDetail { get; set; }
-            public int night { get; set; }
-            public string roomCode { get; set; }
-            public string room { get; set; }
-            public string boardCode { get; set; }
-            public string board { get; set; }
-            public string accom { get; set; }
-            public string star { get; set; }
-        }
-        public class PaymentDetail
-        {
-            public List<PaymentPlan> paymentPlan { get; set; }
-            public List<object> paymentInfo { get; set; }
-        }
+
 
     }
 }
